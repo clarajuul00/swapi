@@ -18,6 +18,7 @@ const buildCharacterSheet = function(data){
     return article;
 };
 
+
 // const buildFilmSheet = function(data){
 //     const article = document.createElement('article');
 //     article.setAttribute('class', 'filmSheet');
