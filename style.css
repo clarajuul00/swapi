@@ -23,3 +23,6 @@ nav ul li a{
     list-style-type: none;
     padding: 0;
 }
+.filmSheet ul li a{
+    color: #fff;
+}

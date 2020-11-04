@@ -11,15 +11,21 @@ const buildCharacterSheet = function(data){
 
     const h1 = document.createElement('h1');
     const name = document.createTextNode(data.name);
-    const p = document.createElement('p');
-    // const height = document.createTextNode(`Højde: ${data.height}`);
-    const birth = document.createTextNode(`Fødsels år: ${data.birth_year}`);
-
     article.appendChild(h1);
     h1.appendChild(name);
-    article.appendChild(p);
-    // p.appendChild(height);
-    p.appendChild(birth);
+
+    
+    const entries = Object.entries(data);
+    console.log(entries);
+
+    for(i = 1; i < entries.length; i++){
+        const p = document.createElement('p');
+        const text = document.createTextNode(`${entries[i][0]}: ${entries[i][1]}`);
+
+        article.appendChild(p);
+        p.appendChild(text);
+    }
+
 
     return article;
 };
@@ -56,7 +62,7 @@ const buildCharacterList = function(data){
         const id = urlString.split('/')[1];
         a.setAttribute('href', `?type=${type}&id=${id}`);
 
-        console.log(urlString);
+        // console.log(urlString);
     }
 
     return ul;
