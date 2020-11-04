@@ -1,0 +1,25 @@
+body{
+    background-image: url("space1.jpg");
+    background-color: #000;
+    color: #fff;
+}
+nav ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+    padding: 2em 1em;
+}
+nav ul li a{
+    color: #ff0;
+    font-size: 1.5em;
+}
+.filmSheet, .characterSheet{
+    text-align: center;
+}
+.filmSheet h1, .characterSheet h1{
+   font-size: 3em;
+}
+.filmSheet ul, .characterSheet ul{
+    list-style-type: none;
+    padding: 0;
+}

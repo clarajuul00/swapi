@@ -11,28 +11,58 @@ const buildCharacterSheet = function(data){
 
     const h1 = document.createElement('h1');
     const name = document.createTextNode(data.name);
+    const p = document.createElement('p');
+    // const height = document.createTextNode(`Højde: ${data.height}`);
+    const birth = document.createTextNode(`Fødsels år: ${data.birth_year}`);
 
-    h1.appendChild(name);
     article.appendChild(h1);
+    h1.appendChild(name);
+    article.appendChild(p);
+    // p.appendChild(height);
+    p.appendChild(birth);
 
     return article;
 };
 
 
-// const buildFilmSheet = function(data){
-//     const article = document.createElement('article');
-//     article.setAttribute('class', 'filmSheet');
+const buildFilmSheet = function(data){
+    const article = document.createElement('article');
+    article.setAttribute('class', 'filmSheet');
 
-//     const h1 = document.createElement('h1');
-//     const name = document.createTextNode(data.title);
+    const h1 = document.createElement('h1');
+    const title = document.createTextNode(data.title);
 
-//     h1.appendChild(name);
-//     article.appendChild(h1);
+    article.appendChild(h1);
+    h1.appendChild(title);
 
-//     return article;
-// };
+    return article;
+};
 
-const buildList = function(data){
+const buildCharacterList = function(data){
+
+    const ul = document.createElement('ul');
+
+    for(let i = 0; i < data.characters.length; i++){
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        const text = document.createTextNode(data.characters[i]);
+        ul.appendChild(li);
+        li.appendChild(a);
+        a.appendChild(text);
+
+        const urlString = data.characters[i].replace('http://swapi.dev/api/', '');
+    
+        const type = urlString.split('/')[0];
+        const id = urlString.split('/')[1];
+        a.setAttribute('href', `?type=${type}&id=${id}`);
+
+        console.log(urlString);
+    }
+
+    return ul;
+};
+
+const buildNav = function(data){
     const nav = document.createElement('nav');
     const ul = document.createElement('ul');
     nav.appendChild(ul);
@@ -46,26 +76,33 @@ const buildList = function(data){
         ul.appendChild(li);
 
         const urlString = data.results[i].url.replace('http://swapi.dev/api/', '');
-    
-        const type = urlString.split('/')[0];
+
+        const type = 'films';
         const id = urlString.split('/')[1];
         a.setAttribute('href', `?type=${type}&id=${id}`);
-        console.log(urlString);
     }
 
     return nav;
 };
 
-const getList = function(type){
+const getNav = function(type){
     fetch(`https://swapi.dev/api/${type}`)
         .then(response => response.json())
         .then(data => {
-            document.querySelector('header').appendChild(buildList(data));
+            document.querySelector('header').appendChild(buildNav(data));
+        });
+};
+
+const getCharacterList = function(type, id){
+    fetch(`https://swapi.dev/api/${type}/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            document.querySelector('.filmSheet').appendChild(buildCharacterList(data));
         });
 };
 
 const getSingle = function(type, id){
-    fetch(`https://swapi.dev/api/${type}${id}/`)
+    fetch(`https://swapi.dev/api/${type}/${id}/`)
         .then(response => response.json())
         .then(data => {
             let sheet;
@@ -73,11 +110,11 @@ const getSingle = function(type, id){
                 case 'people':
                     sheet = buildCharacterSheet(data);
                     break;
-                // case 'films':
-                //     sheet = buildFilmSheet(data);
-                //     break;
+                case 'films':
+                    sheet = buildFilmSheet(data);
+                    break;
                 default:
-                    sheet = buildCharacterSheet(data);
+                    sheet = buildFilmSheet(data);
             };
             document.querySelector('main').clear().appendChild(sheet);
         });
@@ -90,10 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     let type = url.searchParams.get('type') || 'films';
-    let page = url.searchParams.get('page') || 1;
-
     let id = url.searchParams.get('id') || 1;
 
-    getList(type, id);
+    getNav('films', id);
     getSingle(type, id);
+    getCharacterList(type, id);
 });
